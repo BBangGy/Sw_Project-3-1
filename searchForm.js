@@ -1,4 +1,15 @@
-import store from './js/store.js';
+import store from './js/Store.js';
+
+const TabType = {
+  KEYWORD: "KEYWORD",
+  HISTORY: "HISTORY",
+};
+
+const TabLabel = {
+  [TabType.KEYWORD]: "추천 음식",
+  [TabType.HISTORY]: "최근 음식",
+};
+
 class App extends React.Component {
 constructor(){
     super();
@@ -6,14 +17,16 @@ constructor(){
         searchKeyword: "",
         searchResult: [],
         submitted:false,
+        selectedTab:TabType.KEYWORD,
+        keywordList:[],
+
     }
 }
+componentDidMount(){
+  const keywordList = store.getKeywordList();
+  this.setState({keywordList});
+}
 handleReset(){
-  // this.setState(()=>{
-  //     return {searchKeyword:"",submitted:false};
-  // },()=>{
-  //     console.log("Todo:handleReset",this.state.searchKeyword);
-  // })
   this.setState({
     searchKeyword:"",
     submitted:false,
@@ -76,6 +89,34 @@ render() {
   )
 
   );
+  const keywordList=(
+    <ul className="list">
+      {this.state.keywordList.map((item,index)=>{
+        return(
+          <li key = {item.id}>
+            <span className="number">{index+1}</span>
+            <span>{item.keyword}</span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+  const tabs =(
+    <>
+      <ul className="tabs">
+        {Object.values(TabType).map(tabtype  =>(
+            <li className={this.state.selectedTab==tabtype?"active":""} 
+            key={tabtype}
+            onClick={()=>this.setState({selectedTab:tabtype})}
+            >{TabLabel[tabtype]}</li>
+        )  
+        )}
+      </ul>
+      {this.state.selectedTab==TabType.KEYWORD && keywordList}
+
+      {this.state.selectedTab==TabType.HISTORY &&<>TODO: 최근 음식</>}
+    </>
+  );
     return (
       <>
         <header>
@@ -84,7 +125,7 @@ render() {
         <div className="container">
           {searchForm}
           <div className="content">
-            {this.state.submitted && searchResult}
+            {this.state.submitted ? searchResult:tabs}
           </div>
         </div>
       </>
