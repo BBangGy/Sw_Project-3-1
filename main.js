@@ -1,3 +1,4 @@
+import { formatRelativeDate } from './js/helpers.js';
 import store from './js/Store.js';
 
 const TabType = {
@@ -19,12 +20,19 @@ constructor(){
         submitted:false,
         selectedTab:TabType.KEYWORD,
         keywordList:[],
+        historyList:[],
 
     }
 }
 componentDidMount(){
+  //외부에서 데이터를 가져오기 위한것
+  //dom이 마운트 된 직후
   const keywordList = store.getKeywordList();
-  this.setState({keywordList});
+  const historyList= store.getHistoryList();
+  this.setState({
+    keywordList,
+    historyList,
+  });
 }
 handleReset(){
   this.setState({
@@ -48,12 +56,28 @@ handleSubmit(event){
 }
 search(searchKeyword){
     const searchResult=store.search(searchKeyword);
+    const historyList = store.getHistoryList();
     //입력한 검색어로 store에서 search함수를 호출한다.
     //그럼 store는 검색된 상품 항목을 반환한다.
     //그걸 가지고 setState로 searchResult 상태를 갱신한다.
-    this.setState({searchResult,submitted:true,});
+    this.setState({
+      searchResult,
+      searchKeyword,
+      historyList,
+      submitted:true,
+    });
 }
+handleClickRemoveHistory(event,keyword){
+  event.stopPropagation();
+  store.removeHistory(keyword);
+  const historyList = store.getHistoryList();
+  this.setState({
+    historyList,
+  })
+}
+handleInformation(id){
 
+}
 render() {
   const searchForm = (
     <form
@@ -79,7 +103,7 @@ render() {
         {this.state.searchResult.map(({id,imageUrl,name})=>{
           return(
             <li key={id}>
-              <img src={imageUrl}/>
+              <img src={imageUrl} onClick={()=>{this.handleInformation(id)}}/>
               <p>{name}</p>
             </li>
           );
@@ -91,13 +115,25 @@ render() {
   );
   const keywordList=(
     <ul className="list">
-      {this.state.keywordList.map((item,index)=>{
-        return(
-          <li key = {item.id}>
+      {this.state.keywordList.map(({id,keyword},index)=>(
+          <li key = {id}
+          onClick={()=>this.search(keyword)}>
             <span className="number">{index+1}</span>
-            <span>{item.keyword}</span>
+            <span>{keyword}</span>
           </li>
-        );
+      ))}
+    </ul>
+  );
+  const historyList=(
+    <ul className="list">
+      {this.state.historyList.map(({id,keyword,date})=>{
+        return(
+          <li key={id} onClick={()=>this.search(keyword)}>
+            <span>{keyword}</span>
+            <span className="date">{formatRelativeDate(date)}</span>
+            <button className="btn-remove" onClick={event=>{this.handleClickRemoveHistory(event,keyword)}}></button>
+          </li>
+        )
       })}
     </ul>
   );
@@ -114,8 +150,11 @@ render() {
       </ul>
       {this.state.selectedTab==TabType.KEYWORD && keywordList}
 
-      {this.state.selectedTab==TabType.HISTORY &&<>TODO: 최근 음식</>}
+      {this.state.selectedTab==TabType.HISTORY &&historyList}
     </>
+  );
+  const handleInform=(
+
   );
     return (
       <>
