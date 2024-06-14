@@ -3,8 +3,9 @@ import { createPastDate } from "./helpers.js";
 const storage = {
   keywordData: [
     { id: 1, keyword: "샐러드" },
-    { id: 2, keyword: "커리" },
+    { id: 2, keyword: "족발" },
     { id: 3, keyword: "햄버거" },
+    { id: 4, keyword:"쌀국수"},
   ],
 
   historyData: [
@@ -22,9 +23,8 @@ const storage = {
     },
     {
       id: 2,
-      name: "레드 커리",
-      imageUrl:
-        "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjF8fGZvb2R8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=60",
+      name: "마늘 족발",
+      imageUrl:"https://wonandone.co.kr/_xUpFiles/xMenu/20200701175848494888166.jpg",
     },
     {
       id: 3,
@@ -49,6 +49,18 @@ const storage = {
       name: "아스파라거스 샐러드",
       imageUrl:
         "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?ixid=MXwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=60",
+    },
+    {
+      id: 7,
+      name: "불족발",
+      imageUrl:
+        "https://wonandone.co.kr/_xUpFiles/xMenu/20200420192817634149198.jpg",
+    },
+    {
+      id: 7,
+      name: "쌀국수",
+      imageUrl:
+        "https://noodlelovers.com/upload_data/m_product_recipe_set/IMG_9392.JPG",
     },
   ],
 };
