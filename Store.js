@@ -1,5 +1,3 @@
-//db역할을 하는 storage객체만 관리한다.
-
 import { createNextId } from "./helpers.js";
 import storage from "./storage.js";
 
@@ -15,46 +13,45 @@ class Store {
   }
 
   search(keyword) {
-      this.addHistory(keyword);
-      return this.storage.productData.filter((product) =>
-      product.name.includes(keyword)
-      //product이름과 keyword가 일치하는 것이 있는지 찾는다.
-    );
+    this.addHistory(keyword);
 
-  }
-  addHistory(keyword=""){
-    keyword=keyword.trim();
-    if(!keyword){
-      return;
-    }
-    const hadHistory = this.storage.historyData.some(
-      (history)=>history.keyword===keyword
+    return this.storage.productData.filter((product) =>
+      product.name.includes(keyword)
     );
-    if(hadHistory) this.removeHistory(keyword);
-    
-    const NextId = createNextId(this.storage.historyData);
+  }
+
+  addHistory(keyword = "") {
+    keyword = keyword.trim();
+    if (!keyword) return;
+
+    const hasHistory = this.storage.historyData.some(
+      (history) => history.keyword === keyword
+    );
+    if (hasHistory) {
+      this.removeHistory(keyword);
+    }
+
+    const id = createNextId(this.storage.historyData);
     const date = new Date();
-    this.storage.historyData.push({keyword,date});
+    this.storage.historyData.push({ id, keyword, date });
     this.storage.historyData = this.storage.historyData.sort(this._sortHistory);
   }
+
   getKeywordList() {
     return this.storage.keywordData;
   }
-  getHistoryList(){
+
+  getHistoryList() {
     return this.storage.historyData.sort(this._sortHistory);
   }
-  _sortHistory(history1,history2){
-    if(history1.date< history2.date){
-      return 1;
-    }
-    if(history1.date> history2.date){
-      return -1;
-    }
-    return 0;
+
+  _sortHistory(history1, history2) {
+    return history2.date > history1.date;
   }
-  removeHistory(keyword){
+
+  removeHistory(keyword) {
     this.storage.historyData = this.storage.historyData.filter(
-      (history)=> history.keyword!==keyword
+      (history) => history.keyword !== keyword
     );
   }
 }
